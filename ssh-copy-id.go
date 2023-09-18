@@ -186,13 +186,14 @@ func main() {
 
 	var command string
 	if !pCommandLineArgs.ForceMode {
-		command = fmt.Sprintf("if  grep -q '%s' ~/.ssh/authorized_keys;then exit 201;else echo '%s' >> ~/.ssh/authorized_keys;fi", pCommandLineArgs.KeyData, pCommandLineArgs.KeyData)
+		command = fmt.Sprintf("if [[ ! -e \"~/.ssh/authorized_keys\" ]]; then mkdir -p \"~/.ssh\"; touch \"~/.ssh/authorized_keys\" && chmod 600 \"~/.ssh/authorized_keys\"; fi; if  grep -q '%s' \"~/.ssh/authorized_keys\";then exit 201;else echo '%s' >> \"~/.ssh/authorized_keys\";fi", pCommandLineArgs.KeyData, pCommandLineArgs.KeyData)
 	} else {
 		command = fmt.Sprintf("echo '%s' >> ~/.ssh/authorized_keys", pCommandLineArgs.KeyData)
 	}
+
 	exitCode, err := runSSHExec(command)
 	if exitCode == 201 {
-		fmt.Fprintf(os.Stderr, "Error execution command:\n\t\n\t\033[31mPublic key data '%s' already exists in authorized_keys.\033[0m\n\n", pCommandLineArgs.KeyData)
+		fmt.Fprintf(os.Stderr, "Error execution command:\n\t\n\033[31mPublic key data '%s' already exists in authorized_keys.\033[0m\n\n", pCommandLineArgs.KeyData)
 		os.Exit(exitCode)
 	} else if err != nil {
 		fmt.Fprintf(os.Stderr, "Error adding key.Reason: %v", err)
