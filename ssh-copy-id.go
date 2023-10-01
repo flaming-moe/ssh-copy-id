@@ -186,7 +186,7 @@ func main() {
 
 	var command string
 	if !pCommandLineArgs.ForceMode {
-		command = fmt.Sprintf("if [[ ! -e \"~/.ssh/authorized_keys\" ]]; then mkdir -p \"~/.ssh\"; touch \"~/.ssh/authorized_keys\" && chmod 600 \"~/.ssh/authorized_keys\"; fi; if  grep -q '%s' \"~/.ssh/authorized_keys\";then exit 201;else echo '%s' >> \"~/.ssh/authorized_keys\";fi", pCommandLineArgs.KeyData, pCommandLineArgs.KeyData)
+		command = fmt.Sprintf("if [[ ! -e ~/.ssh/authorized_keys ]]; then mkdir -p ~/.ssh; touch ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys; fi; if  grep -q '%s' ~/.ssh/authorized_keys;then exit 201;else echo '%s' >> ~/.ssh/authorized_keys;fi", pCommandLineArgs.KeyData, pCommandLineArgs.KeyData)
 	} else {
 		command = fmt.Sprintf("mkdir -p \"~/.ssh\"; echo '%s' >> ~/.ssh/authorized_keys", pCommandLineArgs.KeyData)
 	}
